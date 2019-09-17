@@ -2,8 +2,12 @@ breed [sedie sedia]
 breed [persone persona]
 breed [palchi palco]
 
+to clear-everything
+  clear-all
+  reset-ticks
+end
 
-to setup
+to setup;devo fare in modo che le sedie più vicine al palco si colorano in modo diverso, in modo che le persone sanno gia dove andare
   let conto-palchi (count palchi)
 
   if conto-palchi > 0 [
@@ -45,6 +49,26 @@ to setup
     set ycor -16
     face one-of palchi
   ]
+
+  if numsedie < numpersone[
+    print "non ci sono abbastanza sedie"
+    clear-all
+    stop;stoppo subito la procedura se non ci sono abbastanza sedie... almeno evito un pò di problemi
+  ]
+
+;ovviamente va fatto il controllo se ci sono abbastanza sedie per le persone
+  let i 0
+  while [i < numpersone][
+    let nearest-neighbor ( min-one-of (other sedie with [color != green]) [ distance (one-of palchi) ] )
+    ask nearest-neighbor [
+      set color green;le sedie più vicine sono quelle verdi quindi
+    ]
+    set i (i + 1)
+  ]
+
+  ;manca la massimizzazione della distanza tra i vicini, e il progetto è terminato
+
+
 
 end
 
@@ -88,13 +112,13 @@ to go
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-828
-62
-1651
-886
+324
+6
+935
+618
 -1
 -1
-24.7
+18.3
 1
 10
 1
@@ -123,7 +147,7 @@ numsedie
 numsedie
 1
 100
-7.0
+6.0
 1
 1
 NIL
@@ -167,7 +191,7 @@ BUTTON
 189
 210
 Clear-all
-clear-all
+clear-everything
 NIL
 1
 T
